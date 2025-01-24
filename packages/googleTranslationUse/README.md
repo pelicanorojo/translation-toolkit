@@ -24,7 +24,7 @@ pnpm add google-translation-use
    ```bash
    export GOOGLE_APPLICATION_CREDENTIALS=/path/to/your/credentials.json
    ```
-
+(or use dotenv as on the googleTranslationUseExample.js example)
 ## Usage
 
 ### Initialization
@@ -46,7 +46,7 @@ const config = init({
 ```javascript
 async function translate() {
   const result = await translateText({
-    contents: ['Hello world', 'Good morning'],
+    contents: ['buenos días, como anda?', 'Yo muy bien, y usted?'],
     config
   });
 
