@@ -1,0 +1,64 @@
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Node.js
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-lock.yaml # or package-lock.json if using npm
+.pnpm-store/
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Build artifacts
+dist/
+build/
+out/
+target/
+*.o
+*.a
+
+# Logs and temp files
+*.log
+*.tmp
+temp/
+tmp/
+
+# Environment files (important!)
+.env
+*.env
+
+# Debug files
+*.dbg
+
+# MacOS files
+__pycache__/
+
+# Packages and archives
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+
+# Personal files (if any)
+personal.txt
+private_key.pem
+
+# Specific to monorepos:
+# If you are using pnpm and want to ignore node_modules in packages but not on root
+packages/**/node_modules
+
+# I use this alias, for point to the credentials, and set the GOOGLE_APPLICATION_CREDENTIALS used by google api.
+examples/GOOGLE_APPLICATION_CREDENTIALS
+#If you are using npm or yarn you can use this
+#node_modules

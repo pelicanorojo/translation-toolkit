@@ -1,0 +1,31 @@
+{
+  "name": "google-translation-use",
+  "version": "1.0.0",
+  "description": "Wrapper for use google translatio api.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["google", "translator", "wrapper"],
+  "author": {
+    "name": "Pablo Ernesto Benito (pelicanorojo)",
+    "email": "bioingbenito@gmail.com",
+    "url": "https://github.com/pelicanorojo"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pelicanorojo/translationToolkitMonorepo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pelicanorojo/translationToolkitMonorepo/issues"
+  },
+  "engines": {
+    "node": ">=20.13.1"
+  },
+  "packageManager": "pnpm@10.0.0+sha512.b8fef5494bd3fe4cbd4edabd0745df2ee5be3e4b0b8b08fa643aa3e4c6702ccc0f00d68fa8a8c9858a735a0032485a44990ed2810526c875e416f001b17df12b",
+  "dependencies": {
+    "@google-cloud/translate": "^7.1.0"
+  }
+}

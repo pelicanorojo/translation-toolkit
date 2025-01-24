@@ -1,0 +1,7 @@
+{
+  "name": "translation-toolkit",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}

@@ -1,0 +1,7 @@
+#read test:
+ITSME=porsupollo#for test .env is correctly loaded
+
+#googleTranslationUseExample
+GOOGLE_APPLICATION_CREDENTIALS="GOOGLE_APPLICATION_CREDENTIALS"#point to the google application credential json, I use a mac soft link
+GCP_PROJECT_ID=aGoogleProjectId
+GCP_LOCATION=global
