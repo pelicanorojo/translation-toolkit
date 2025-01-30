@@ -36,6 +36,7 @@ tmp/
 # Environment files (important!)
 .env
 *.env
+*/**/.env
 
 # Debug files
 *.dbg
@@ -59,6 +60,6 @@ private_key.pem
 packages/**/node_modules
 
 # I use this alias, for point to the credentials, and set the GOOGLE_APPLICATION_CREDENTIALS used by google api.
-examples/GOOGLE_APPLICATION_CREDENTIALS
+*/**/GOOGLE_APPLICATION_CREDENTIALS
 #If you are using npm or yarn you can use this
 #node_modules

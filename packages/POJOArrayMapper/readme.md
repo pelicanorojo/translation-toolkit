@@ -11,7 +11,7 @@ A JavaScript library for transforming deeply nested object structures into flat 
 - Robust handling of broken/invalid paths
 - No external dependencies (though compatible with lodash if preferred)
 
-## Installation (soon)
+## Installation (soon - by now I use pnpm alias --global for have locally the packages)
 
 ```bash
 npm install pojo-array-mapper

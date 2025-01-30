@@ -2,7 +2,7 @@
  * @Author: Pablo Benito <pelicanorojo> bioingbenito@gmail.com
  * @Date: 2025-01-23T01:49:21-03:00
  * @Last modified by: Pablo Benito <pelicanorojo>
- * @Last modified time: 2025-01-23T08:19:26-03:00
+ * @Last modified time: 2025-01-30T01:20:51-03:00
  */
 
 
@@ -14,7 +14,8 @@ import { TranslationServiceClient } from '@google-cloud/translate';
 // Instantiates a client
 export const init = ({projectId, location = 'global', sourceLan = 'es', targetLan = 'en', mimeType = 'text/plain'})  => ({
   projectId, location, sourceLan, targetLan,  mimeType,
-  client: new TranslationServiceClient()
+  client: new TranslationServiceClient(),
+  setTargetLan: function (l) {this.targetLan = l;}
 });
 
 

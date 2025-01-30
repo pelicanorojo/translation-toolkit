@@ -12,6 +12,7 @@ translation-toolkit/
 │   └── json-translation-mapper/    # JSON translation mapping tools (soon)
 │
 ├── examples/
+│   ├── pojoArrayManagerAndTranslator # a fully functional cli for translate jsons given json paths. not npm ready, should be imported translation-toolkit complete.
 │   └── googleTranslationUseExample.js          # Example usage of packages
 │
 ├── pnpm-workspace.yaml
@@ -43,6 +44,18 @@ A lightweight wrapper for Google Cloud Translation API.
 
 [View Package README](/packages/google-translation-use/README.md)
 
+## Examples
+### 1. pojoArrayManagerAndTranslator
+This is the reason for this translation-toolkit.
+
+Combines the POJOArrayMapper, for construct first a flat list of leaves properties for translate, and do a distinct computation, for less api use,
+ with googleTranslationUse, which does the api request, for the flat arrays of distinct strings for each jsons to translate and each language.
+Finally POJOArrayMapper is used again for map the distinct translation onto the OLeaves  nested structure, and the final point
+again with POJOArrayMapper is inject back in a copied object, the translated leaves.
+
+Note: the flattening was motivated for use the google translation api contents array input.
+Note: the flat distinct computing and reverse map, was motivated, cause one json was past the limit, and this did to work well,
+  if the distinct would have failed, then I would need other trick, split the big array with some computation based on the api limits.
 
 ## Development
 

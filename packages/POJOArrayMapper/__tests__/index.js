@@ -2,14 +2,18 @@
  * @Author: Pablo Benito <pelicanorojo> bioingbenito@gmail.com
  * @Date: 2024-12-27T11:22:32-03:00
  * @Last modified by: Pablo Benito <pelicanorojo>
- * @Last modified time: 2025-01-15T01:22:00-03:00
+ * @Last modified time: 2025-01-30T12:14:19-03:00
  */
 
 
 import { getDefaultReference, getDirectPathValue, setDirectPathValue
   , each, fanOut, extractOLeaves
-  , fanIn, injectOLeaves } from '@src/POJOArrayMapper';
+  , toCloneNestedIndexes
+  , fanIn, injectOLeaves
+  , packOLeaves, unpackOleaves
+} from '@src/index';
 
+//*
 describe (`getDefaultReference`, () => {
   it(`Should always return the same default reference.`, () => {
     let r1 = getDefaultReference();
@@ -17,7 +21,8 @@ describe (`getDefaultReference`, () => {
     expect(r1).toBe(r2);
   })
 });
-
+//*/
+//*
 describe(`getDirectPathValue`, () => {
   it(`Should return default value when directPath with no string`, () => {
     let o = {a: 1};
@@ -136,7 +141,7 @@ describe(`getDirectPathValue`, () => {
     expect(result).toBe('theDefault');
   });
 });
-
+//*/
 //*
 describe(`setDirectPathValue`, () => {
   
@@ -263,7 +268,7 @@ describe(`fanOut`, () => {//export function fanOut(obj, directPathChain, index =
     const directPathChain = ['', 'a.b', 'name'];
     const r = fanOut({obj, directPathChain});
     expect(r.b).toBe(false);
-    expect(r.i).toEqual([[0, [0, 1]], [1, [0, 1]]]);
+    expect(r.i).toEqual([['0', ['0', '1']], ['1', ['0', '1']]]);
     expect(r.v).toEqual(['p', 'j', 'x', 'y']);
   });
 
@@ -271,7 +276,7 @@ describe(`fanOut`, () => {//export function fanOut(obj, directPathChain, index =
     let obj = {'o': {a: {b: [{name: 'p'}, {name: 'j'}]}}, 't': {a: {b: [{name: 'x'}, {name: 'y'}]}}};
     let directPathChain = ['', 'a.b', 'name'];
     let r = fanOut({obj, directPathChain});
-    expect(r.i).toEqual([['o', [0, 1]], ['t', [0, 1]]]);
+    expect(r.i).toEqual([['o', ['0', '1']], ['t', ['0', '1']]]);
     expect(r.v).toEqual(['p', 'j', 'x', 'y']);
   });
 
@@ -280,7 +285,7 @@ describe(`fanOut`, () => {//export function fanOut(obj, directPathChain, index =
 
     const directPathChain = ['', 'a.b', 'name', ''];
     const r = fanOut({obj, directPathChain, addBrokenPaths: true});
-    expect(r.i).toEqual([['o', [[0, [0, 1]], [1, [0, 1]]]], ['t', [[0, [0, 1]], [1, [0,1]]]]]);//, ['t', [[0, [0, 1]], [1, [0,1]]]]]]]);
+    expect(r.i).toEqual([['o', [['0', ['0', '1']], ['1', ['0', '1']]]], ['t', [['0', ['0', '1']], ['1', ['0','1']]]]]);//, ['t', [[0, [0, 1]], [1, [0,1]]]]]]]);
     expect(r.v).toEqual(['p1', 'p2', 'j1', 'j2',  'x1', 'x2', 'y1', 'y2']);
   });
 
@@ -291,7 +296,7 @@ describe(`fanOut`, () => {//export function fanOut(obj, directPathChain, index =
     const r = fanOut({obj, directPathChain});
     //NOTE: actually should be done i[j] against v[j] checks, as weel as are all expected i[j]
     // cause the property orders could change in production use (deleted followed by recreation.)
-    expect(r.i).toEqual([[0, ['name', 'nick']], [1, ['name', 'nick']]]);
+    expect(r.i).toEqual([['0', ['name', 'nick']], ['1', ['name', 'nick']]]);
     expect(r.v).toEqual(['p', 'n', 'j', 'm']);
   });
   
@@ -299,7 +304,7 @@ describe(`fanOut`, () => {//export function fanOut(obj, directPathChain, index =
     const obj = getTestData();
     const directPathChain = ['results.0.intervals', 'intervalType'];
     const r = fanOut({obj, directPathChain});
-    expect(r.i).toEqual([0, 1, 2]);
+    expect(r.i).toEqual(['0', '1', '2']);
     expect(r.v).toEqual(['warmUp', 'middle', 'coolDown']);
   });
 
@@ -323,7 +328,7 @@ describe(`fanOut`, () => {//export function fanOut(obj, directPathChain, index =
     const directPathChain = ['results', 'intervalsz', 'intervalType'];
     const r = fanOut({obj, directPathChain, addBrokenPaths: true});
     expect(r.b).toEqual(true);
-    expect(r.i).toEqual([0, 1, 2]);
+    expect(r.i).toEqual(['0', '1', '2']);
     expect(r.v).toEqual([getDefaultReference(), getDefaultReference(), getDefaultReference()]);
   });
 
@@ -332,7 +337,7 @@ describe(`fanOut`, () => {//export function fanOut(obj, directPathChain, index =
     const directPathChain = ['results', 'intervals', 'intervalType'];
     const r = fanOut({obj, directPathChain, addBrokenPaths: true});
     expect(r.b).toEqual(true);
-    expect(r.i).toEqual([[0, [0, 1, 2]], [1, [0, 1, 2, 3, 4, 5]], 2]);
+    expect(r.i).toEqual([['0', ['0', '1', '2']], ['1', ['0', '1', '2', '3', '4', '5']], '2']);
     expect(r.v).toEqual([
       'warmUp', 'middle', 'coolDown'
       , 'warmUp', 'middle', 'middle', 'middle', 'middle', 'middle'
@@ -353,7 +358,7 @@ describe(`fanOut`, () => {//export function fanOut(obj, directPathChain, index =
     let obj = {'': {a: {b: [{name: 'p', nick: 'n'}, {name: 'j', nick: 'm'}]}}};
     const directPathChain = ['"".a.b', '', ''];
     let r = fanOut({obj, directPathChain});
-    expect(r.i).toEqual([[0, ['name', 'nick']], [1, ['name', 'nick']]]);
+    expect(r.i).toEqual([['0', ['name', 'nick']], ['1', ['name', 'nick']]]);
     expect(r.v).toEqual(['p', 'n', 'j', 'm']);
   });
 });
@@ -384,7 +389,7 @@ describe(`extractOLeaves`, () => {
     const fanOuts = ['', 'a.b', 'name'];
     const r = extractOLeaves({obj, directPathChain: '[].a.b[].name'});
     expect(r.d).toEqual(2); expect(r.p).toEqual(fanOuts);
-    expect(r.i).toEqual([[0, [0, 1]], [1, [0, 1]]]); expect(r.v).toEqual(['p', 'j', 'x', 'y']);
+    expect(r.i).toEqual([['0', ['0', '1']], ['1', ['0', '1']]]); expect(r.v).toEqual(['p', 'j', 'x', 'y']);
   });
 
   it(`Should spawn well a root object.`, () => {
@@ -392,7 +397,7 @@ describe(`extractOLeaves`, () => {
     const fanOuts = ['', 'a.b', 'name'];
     const r = extractOLeaves({obj, directPathChain: '[].a.b[].name'});
     expect(r.d).toEqual(2); expect(r.p).toEqual(fanOuts);
-    expect(r.i).toEqual([['o', [0, 1]], ['t', [0, 1]]]);
+    expect(r.i).toEqual([['o', ['0', '1']], ['t', ['0', '1']]]);
     expect(r.v).toEqual(['p', 'j', 'x', 'y']);
   });
 
@@ -403,8 +408,8 @@ describe(`extractOLeaves`, () => {
     const r = extractOLeaves({obj, directPathChain: '[].a.b[].name[]'});
     expect(r.d).toEqual(3); expect(r.p).toEqual(fanOuts);
     expect(r.i).toEqual([
-      ['o', [[0, [0, 1]], [1, [0, 1]]]]
-    , ['t', [[0, [0, 1]], [1, [0, 1]]]]
+      ['o', [['0', ['0', '1']], ['1', ['0', '1']]]]
+    , ['t', [['0', ['0', '1']], ['1', ['0', '1']]]]
     ]);
     expect(r.v).toEqual(['p1', 'p2', 'j1', 'j2',  'x1', 'x2', 'y1', 'y2']);
   });
@@ -419,7 +424,7 @@ describe(`extractOLeaves`, () => {
     // cause the property orders could change in production use (deleted followed by recreation.)
     expect(r.d).toEqual(2); expect(r.p).toEqual(fanOuts);
     expect(r.i).toEqual([
-      [0, ['name', 'nick']], [1, ['name', 'nick']]
+      ['0', ['name', 'nick']], ['1', ['name', 'nick']]
     ]);
     expect(r.v).toEqual(['p', 'n', 'j', 'm']);
   });
@@ -429,7 +434,7 @@ describe(`extractOLeaves`, () => {
     const fanOuts = ['results.0.intervals', 'intervalType'];
     const r = extractOLeaves({obj, directPathChain: 'results.0.intervals[].intervalType'});
     expect(r.d).toEqual(1); expect(r.p).toEqual(fanOuts);
-    expect(r.i).toEqual([0, 1, 2]);
+    expect(r.i).toEqual(['0', '1', '2']);
     expect(r.v).toEqual(['warmUp', 'middle', 'coolDown']);
     expect(r.b).toBe(false);
   });
@@ -451,8 +456,24 @@ describe(`extractOLeaves`, () => {
 
     expect(r.b).toBe(true);
     expect(r.d).toEqual(2); expect(r.p).toEqual(fanOuts);
-    expect(r.i).toEqual([0, 1, 2]);
+    expect(r.i).toEqual(['0', '1', '2']);
     expect(r.v).toEqual([getDefaultReference(), getDefaultReference(), getDefaultReference()]);
+  });
+});
+//*/
+//*
+describe(`toCloneNestedIndexes`, () => {
+  it(`Should deep clone indexes nested arrays`, () => {
+    const nIndexes = [ [0, ['a', 'b']], [1, [0, 1]]];
+  
+    const c = toCloneNestedIndexes(nIndexes);
+
+    expect(c[0][1]).toEqual(['a', 'b']);
+    expect(c[1][1]).toEqual([0, 1]);
+    expect(c[0][1]).toEqual(nIndexes[0][1]);
+    expect(c[1][1]).toEqual(nIndexes[1][1]);
+    expect(c[0][1]).not.toBe(nIndexes[0][1]);
+    expect(c[1][1]).not.toBe(nIndexes[1][1]);
   });
 });
 //*/
@@ -636,6 +657,89 @@ describe(`injectOLeaves`, () => {
   expect(obj.a.b[1].x.a['1'].y).toEqual(originals[5] + 'j');
   expect(obj.a.b[1].x.b['1'].x).toEqual(originals[6] + 'j');
   expect(obj.a.b[1].x.b['1'].y).toEqual(originals[7] + 'j');
+});
+//*/
+
+//*
+describe(`packOLeaves`, () => {
+  it(`Should generate as results as jsonPaths`, () => {
+    let obj = {a: {b: [
+      {
+        x: {
+          a: [0, {x: 'a', y: 'b'}]
+          , b: [0, {x: 'c', y: 'd'}]
+        }
+      }
+      , {
+        x: {
+          a: [0, {x: 'e', y: 'f'}]
+          , b: [0, {x: 'g', y: 'h'}]
+        }
+      }
+    ]}
+    , c: [5, 6, 7]
+    };
+
+    const directPathChains = ['a.b[].x[].1[]', 'c[]'];
+
+    let processedOLeaves = packOLeaves({obj, directPathChains});
+    expect(processedOLeaves.l.length).toBe(2);
+    expect(processedOLeaves.l[0].b).toBe(false);
+    expect(processedOLeaves.l[1].b).toBe(false);
+
+    expect(processedOLeaves.l[0].v).toEqual([]);
+    expect(processedOLeaves.l[1].v).toEqual([]);
+
+    expect(processedOLeaves.p.v).toEqual(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 5, 6, 7])
+    expect(processedOLeaves.p.i).toEqual([ ['0', ['0', '1', '2', '3', '4', '5', '6', '7']], ['1', ['0', '1', '2']]]);
+  });
+});
+//*/
+//*
+describe(`unpackOleaves`, () => {
+  it(`Should be regenerated the original object, with its values processed`, () => {
+    let obj = {a: {b: [
+      {
+        x: {
+          a: [0, {x: 'a', y: 'b'}]
+          , b: [0, {x: 'c', y: 'd'}]
+        }
+      }
+      , {
+        x: {
+          a: [0, {x: 'e', y: 'f'}]
+          , b: [0, {x: 'g', y: 'h'}]
+        }
+      }
+    ]}
+    , c: [5, 6, 7]
+    };
+
+    const directPathChains = ['a.b[].x[].1[]', 'c[]'];
+       
+    let processedOLeaves = packOLeaves({obj, directPathChains});
+
+    let originals = [...processedOLeaves.p.v];   
+    processedOLeaves.p.v = processedOLeaves.p.v.map( e => e + 'j');
+//   let ok = fanIn({obj, directPathChain, nestedIndexes: f.i, flatList: f.v});
+
+    //let ok = fanIn({obj: processedOLeaves.l, directPathChain: directPathChains[0], nestedIndexes: processedOLeaves.l[0].i, flatList: })//unpackOleaves({oLeaves: processedOLeaves.l, packedOLeaves: processedOLeaves.p});
+    let ok = unpackOleaves({obj, oLeaves: processedOLeaves.l, packedOLeaves: processedOLeaves.p});
+
+    expect(ok).toBe(true);
+    expect(obj.a.b[0].x.a['1'].x).toEqual(originals[0] + 'j');
+    expect(obj.a.b[0].x.a['1'].y).toEqual(originals[1] + 'j');
+    expect(obj.a.b[0].x.b['1'].x).toEqual(originals[2] + 'j');
+    expect(obj.a.b[0].x.b['1'].y).toEqual(originals[3] + 'j');
+    expect(obj.a.b[1].x.a['1'].x).toEqual(originals[4] + 'j');
+    expect(obj.a.b[1].x.a['1'].y).toEqual(originals[5] + 'j');
+    expect(obj.a.b[1].x.b['1'].x).toEqual(originals[6] + 'j');
+    expect(obj.a.b[1].x.b['1'].y).toEqual(originals[7] + 'j');
+
+    expect(obj.c[0]).toEqual(originals[8] + 'j');
+    expect(obj.c[1]).toEqual(originals[9] + 'j');
+    expect(obj.c[2]).toEqual(originals[10] + 'j');
+  });  
 });
 //*/
 function getTestData () {
