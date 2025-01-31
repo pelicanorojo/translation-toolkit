@@ -1,0 +1,13 @@
+{
+	"commons": {
+		"plan": "Plan",
+		"raceDate": "Race Day",
+		"configuration": "Configuration",
+		"selectorTitle": "Select the training plan and race day.",
+		"schedule": "Schedule",
+		"trainingOrder": "Training Order",
+		"date": "Date",
+		"favorite": "Favorite",
+		"selectFavorite": "Choose favorite"
+	}
+}

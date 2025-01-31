@@ -1,0 +1,13 @@
+{
+	"commons": {
+		"plan": "Planen",
+		"raceDate": "Renntag",
+		"configuration": "Konfiguration",
+		"selectorTitle": "Wählen Sie den Trainingsplan und den Renntag aus.",
+		"schedule": "Zeitplan",
+		"trainingOrder": "Trainingsreihenfolge",
+		"date": "Datum",
+		"favorite": "Favorit",
+		"selectFavorite": "Favoriten auswählen"
+	}
+}

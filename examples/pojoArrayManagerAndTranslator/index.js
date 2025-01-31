@@ -2,7 +2,7 @@
  * @Author: Pablo Benito <pelicanorojo> bioingbenito@gmail.com
  * @Date: 2025-01-27T08:52:34-03:00
  * @Last modified by: Pablo Benito <pelicanorojo>
- * @Last modified time: 2025-01-30T01:30:44-03:00
+ * @Last modified time: 2025-01-30T09:49:05-03:00
  */
 
 
@@ -20,9 +20,11 @@ await main();
 async function main() {
   const env = process.env;
 
+  //init = ({projectId, location = 'global', sourceLan = 'es', targetLan = 'en', mimeType = 'text/plain'})  => ({
   const transConfig = init({
     projectId: env.GCP_PROJECT_ID,
-    location: env.GCP_LOCATION
+    location: env.GCP_LOCATION,
+
   });
 
   // the trick for work with es6 modules
@@ -42,7 +44,10 @@ async function main() {
   await makeFolders({rootFolder, destinationSubfolder, destinationLanguages});
 
   const fileNames = await listFileNames({folder: sourceFolder});
-  const jsonPaths = ['results[].trainingNotes[]', 'results[].workoutName'];
+  //for training plans:
+  //const jsonPaths = ['[].trainingNotes[]', 'results[].workoutName'];
+  //for labels
+  const jsonPaths = ['commons[]'];
 
 
   for (const fileName of fileNames) {

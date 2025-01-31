@@ -1,0 +1,13 @@
+{
+  "commons": {
+    "plan": "Plan",
+    "raceDate": "Día de Carrera",
+    "configuration": "Configuración",
+    "selectorTitle": "Selecciona el plan de entrenamiento y el dída de carrera.",
+    "schedule": "Cronograma",
+    "trainingOrder": "Orden de Entrenamiento",
+    "date": "Fecha",
+    "favorite": "Favorito",
+    "selectFavorite": "Elegir favorito"
+  }
+}
